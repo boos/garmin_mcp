@@ -1,0 +1,19 @@
+name: Scheduled Upstream Sync
+
+on:
+  schedule:
+    - cron: '0 */24 * * *' # Runs every 6 hours
+  workflow_dispatch: # Allows you to trigger it manually via the Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Sync fork with upstream
+        run: gh repo sync $REPOSITORY -b $BRANCH_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH_NAME: main # Change to 'master' if the upstream default branch is master
